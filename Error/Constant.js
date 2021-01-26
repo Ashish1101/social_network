@@ -3,7 +3,8 @@ export const errorName = {
     HANDLETAKEN : "HANDLETAKEN",
     GMAILSUPPORT:"GMAILSUPPORT",
     EMAILNOTFOUND:"EMAILNOTFOUND",
-    CREDENTIAL_INVALID:"CREDENTIAL_INVALID"
+    CREDENTIAL_INVALID:"CREDENTIAL_INVALID",
+    UNAUTHORIZED:"UNAUTHORIZED"
 }
 
 export const errorType = {
@@ -26,6 +27,10 @@ export const errorType = {
     CREDENTIAL_INVALID: {
         message:"Wrong Information!",
         statusCode:401
+    },
+    UNAUTHORIZED: {
+        message:"Access Denied!",
+        statusCode:400
     }
 
 }
