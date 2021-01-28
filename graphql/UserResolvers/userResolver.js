@@ -46,30 +46,37 @@ const userResolver = {
 				if (!isMatch) {
 					throw new Error(errorName.CREDENTIAL_INVALID);
 				}
+				
+				const payload = {
+					userId : user.id
+				}
 				const token = jwt.sign(
-					{ userId: user._doc.id },
+					payload,
 					process.env.JWT_SECRET,
 					{ expiresIn: "1h" }
 				);
-				return { msg: "Login successfull", token: token, _id: user._id };
+				return { msg: "Login successfull", token: token, userId: user.id };
 			}
 		} catch (err) {
 			throw err;
 		}
 	},
 	updateUser: async (args, req) => {
-		//  if(!req.isAuth) {
-		//      throw new Error(errorName.UNAUTHORIZED);
-        //  }
+		 if(!req.isAuth) {
+		     throw new Error(errorName.UNAUTHORIZED);
+         }
         
         //todo change arg._id  with req.userId
 		try {
-			const user = await User.findById(args._id);
+			console.log('user id ', req.userId)
+			console.log('isAuth' , req.isAuth)
+			const user = await User.findById(req.userId);
+			console.log('id' , user._id)
 			if (!user) {
 				throw new Error(errorName.EMAILNOTFOUND);
 			} else {
 				 await User.updateOne(
-					{ _id: args._id },
+					{ _id: req.userId },
 					{
 						$set: {
 							email: args.email || user.email,
@@ -78,7 +85,7 @@ const userResolver = {
 					},
 					{ new: true  , upsert:true}
                 );
-               const newUser = await User.findById(args._id);
+               const newUser = await User.findById(req.userId);
                return {...newUser._doc , _id : newUser._id}
 			}
 		} catch (err) {

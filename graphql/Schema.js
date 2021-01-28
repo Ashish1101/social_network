@@ -7,10 +7,21 @@ const Schema = buildSchema(`
         _id : ID!
     }
 
+    type Comment {
+        title : String!
+        user: User!
+    }
+
+    type Post {
+        title : String!
+        _id : ID!
+        user : User!
+    }
+
     type AuthData {
         msg:String!
         token : String!
-        _id:ID!
+        userId:ID!
     }
 
     type updateUser {
@@ -24,8 +35,9 @@ const Schema = buildSchema(`
     type Mutation {
         addUser(email:String! , password:String! , handle:String!) : User!
         loginUser(email:String! , password:String!): AuthData!
-        updateUser(_id:ID! , email:String! , handle:String) : User!
+        updateUser(email:String! , handle:String) : User!
         deleteUser(_id:ID!):String!
+        createPost(title:String!) : Post!
     }
        
 `);
