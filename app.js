@@ -7,6 +7,7 @@ import Schema from './graphql/Schema.js'
 import rootResolver from './graphql/Resolvers.js'
 import mongoDb from './config/db.js'
 import {getErrorCode} from './Error/Constant.js'
+import isAuth from './config/auth.js'
 //enviorment var
 dotenv.config();
 mongoDb();
@@ -15,7 +16,9 @@ mongoDb();
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(morgan('dev'));
-
+app.use(isAuth)
+app.use(express.json());
+app.use(express.urlencoded({extended:true}))
 
 
 //graphql server
