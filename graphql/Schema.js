@@ -30,6 +30,7 @@ const Schema = buildSchema(`
 
     type Query {
        showUser(email:String!) : User!
+     
     }
 
     type Mutation {
@@ -38,6 +39,7 @@ const Schema = buildSchema(`
         updateUser(email:String! , handle:String) : User!
         deleteUser(_id:ID!):String!
         createPost(title:String!) : Post!
+        updatePost(title:String! , _id:ID!) : Post!
     }
        
 `);

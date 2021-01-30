@@ -4,7 +4,8 @@ export const errorName = {
     GMAILSUPPORT:"GMAILSUPPORT",
     EMAILNOTFOUND:"EMAILNOTFOUND",
     CREDENTIAL_INVALID:"CREDENTIAL_INVALID",
-    UNAUTHORIZED:"UNAUTHORIZED"
+    UNAUTHORIZED:"UNAUTHORIZED",
+    POST_NOT_FOUND :"POST_NOT_FOUND"
 }
 
 export const errorType = {
@@ -31,6 +32,10 @@ export const errorType = {
     UNAUTHORIZED: {
         message:"Access Denied!",
         statusCode:400
+    },
+    POST_NOT_FOUND: {
+        message : "Post does'nt exists",
+        statusCode:401
     }
 
 }

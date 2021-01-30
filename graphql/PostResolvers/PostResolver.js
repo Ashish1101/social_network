@@ -34,5 +34,24 @@ export default  {
        } catch (err) {
            throw err
        }
+    },
+    updatePost : async (args , req) => {
+        if(!req.isAuth) {
+            throw new Error(errorName.UNAUTHORIZED)
+        }
+         try {
+            const post = await Post.findById(args._id).populate('user').select('-password')
+            if(!post) {
+                throw new Error(errorName.POST_NOT_FOUND)
+            }
+            if(!post) {
+                throw new Error(errorName.POST_NOT_FOUND)
+            }
+            
+            await Post.updateOne({_id:post.id} , {$set:{title:args.title}} , {new:true})
+            return {...post._doc}
+         } catch (err) {
+             throw err;
+         }
     }
 }
