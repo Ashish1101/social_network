@@ -5,6 +5,7 @@ const Schema = buildSchema(`
         handle : String!
         email : String
         _id : ID!
+        posts: [Post]!
     }
 
     type Comment {
@@ -15,6 +16,7 @@ const Schema = buildSchema(`
     type Post {
         title : String!
         _id : ID!
+        createdAt:String!
         user : User!
     }
 
@@ -30,7 +32,8 @@ const Schema = buildSchema(`
 
     type Query {
        showUser(email:String!) : User!
-     
+       readPostsOfUser: User!
+       readSinglePost(_id:ID!):Post!
     }
 
     type Mutation {
@@ -40,6 +43,8 @@ const Schema = buildSchema(`
         deleteUser(_id:ID!):String!
         createPost(title:String!) : Post!
         updatePost(title:String! , _id:ID!) : Post!
+        deletePost(_id:ID!) : String!
+     
     }
        
 `);
