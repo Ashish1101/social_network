@@ -16,23 +16,14 @@ const userResolver = {
 				user = new User({
 					email: args.email,
 					password: args.password,
-					handle: args.handle,
+					handle:''
 				});
-				// const handleFilter = await User.find({});
-				// console.log('handlefilter' , handleFilter)
-				// const existingHandle = handleFilter.find(
-				// 	(user) => user.handle === args.handle
-				// );
-				// for(let i = 0; i < handleFilter.length; i++) {
-				// 	if(handleFilter[i].handle === user.handle) {
-				// 		throw new Error(errorName.HANDLETAKEN);
-				// 	}
-				// }
-				// console.log('exists',existingHandle)
-				// if (existingHandle) {
-				// 	throw new Error(errorName.HANDLETAKEN);
-				// }
-				user.handle = `@${user.handle}`;
+				//Task to find out handle if exists then do not create account
+				 
+				const gethandle = user.email.split('@');
+				console.log(gethandle)
+
+				user.handle = `@${gethandle[0]}`;
 				const salt = await bcryptjs.genSalt(10);
 				user.password = await bcryptjs.hash(args.password, salt);
 				await user.save();
@@ -129,6 +120,23 @@ const userResolver = {
 			return {user}
 		} catch (err) {
 			throw err
+		}
+	},
+	getUserByHandle: async (args , req) => {
+		if(!req.isAuth) {
+			throw new Error(errorName.UNAUTHORIZED);
+		}
+		try {
+			const user = await User.findOne({handle:args.handle}).populate({
+				path:'posts',
+				populate: {path:'comments', populate: {path: 'user'}}
+			}).select('-password')
+			if(!user) {
+				throw new Error(errorName.EMAILNOTFOUND)
+			}
+			return {...user._doc}
+		} catch (error) {
+			throw error
 		}
 	}
 };

@@ -38,10 +38,11 @@ const Schema = buildSchema(`
        readPostsOfUser: User!
        readSinglePost(_id:ID!):Post!
        getUserByID(_id:ID!):User!
+       getUserByHandle(handle:String!):User!
     }
 
     type Mutation {
-        addUser(email:String! , password:String! , handle:String!) : User!
+        addUser(email:String! , password:String!) : User!
         loginUser(email:String! , password:String!): AuthData!
         updateUser(email:String! , handle:String) : User!
         deleteUser(_id:ID!):String!
