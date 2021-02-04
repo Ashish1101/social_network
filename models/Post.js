@@ -12,7 +12,7 @@ const postSchema = new mongoose.Schema({
     comments:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:"Comment"
+            ref:'Comment'
         }
     ],
     likes:[
@@ -23,6 +23,8 @@ const postSchema = new mongoose.Schema({
     ]
 
 } , {timestamps:true})
+
+
 
 const Post = mongoose.model('Post' , postSchema);
 

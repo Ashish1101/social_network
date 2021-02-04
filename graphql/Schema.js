@@ -9,17 +9,19 @@ const Schema = buildSchema(`
     }
 
     type Comment {
-        title : String!
-        user: User!
+        _id:ID!
+        title:String!
+        user:User!
     }
 
     type Post {
         title : String!
         _id : ID!
+        comments:[Comment]!
         createdAt:String!
         user : User!
     }
-
+    
     type AuthData {
         msg:String!
         token : String!
@@ -30,10 +32,12 @@ const Schema = buildSchema(`
         user : User!
     }
 
+
     type Query {
        showUser(email:String!) : User!
        readPostsOfUser: User!
        readSinglePost(_id:ID!):Post!
+       getUserByID(_id:ID!):User!
     }
 
     type Mutation {
@@ -44,7 +48,7 @@ const Schema = buildSchema(`
         createPost(title:String!) : Post!
         updatePost(title:String! , _id:ID!) : Post!
         deletePost(_id:ID!) : String!
-     
+        addComment(title:String!, _id:ID!):Comment!
     }
        
 `);

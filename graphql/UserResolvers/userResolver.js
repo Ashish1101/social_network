@@ -18,13 +18,20 @@ const userResolver = {
 					password: args.password,
 					handle: args.handle,
 				});
-				const handleFilter = await User.find();
-				const existingHandle = handleFilter.find(
-					(user) => user.handle === args.handle
-				);
-				if (existingHandle) {
-					throw new Error(errorName.HANDLETAKEN);
-				}
+				// const handleFilter = await User.find({});
+				// console.log('handlefilter' , handleFilter)
+				// const existingHandle = handleFilter.find(
+				// 	(user) => user.handle === args.handle
+				// );
+				// for(let i = 0; i < handleFilter.length; i++) {
+				// 	if(handleFilter[i].handle === user.handle) {
+				// 		throw new Error(errorName.HANDLETAKEN);
+				// 	}
+				// }
+				// console.log('exists',existingHandle)
+				// if (existingHandle) {
+				// 	throw new Error(errorName.HANDLETAKEN);
+				// }
 				user.handle = `@${user.handle}`;
 				const salt = await bcryptjs.genSalt(10);
 				user.password = await bcryptjs.hash(args.password, salt);
@@ -93,6 +100,9 @@ const userResolver = {
 		}
     },
     deleteUser:  async (args) => {
+		if(!req.isAuth) {
+			throw new Error(errorName.UNAUTHORIZED);
+		}
            try {
                const removeUser = await User.findById(args._id);
                if(!removeUser) {
@@ -105,7 +115,22 @@ const userResolver = {
            } catch (err) {
                throw err;
            }
-    }
+	},
+	getUserByID: async (args , req) => {
+		if(!req.isAuth) {
+			throw new Error(errorName.UNAUTHORIZED);
+		}
+        try {
+			const user = await User.findById(args._id).select('-posts');
+			if(!user) {
+				throw new Error(errorName.EMAILNOTFOUND)
+			}
+			console.log(user)
+			return {user}
+		} catch (err) {
+			throw err
+		}
+	}
 };
 
 export default userResolver;
