@@ -10,6 +10,7 @@ const Schema = buildSchema(`
 
     type Comment {
         _id:ID!
+        createdAt:String!
         title:String!
         user:User!
     }
