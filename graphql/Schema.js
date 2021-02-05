@@ -47,11 +47,19 @@ const Schema = buildSchema(`
         loginUser(email:String! , password:String!): AuthData!
         updateUser(email:String! , handle:String) : User!
         deleteUser(_id:ID!):String!
+
+
         createPost(title:String!) : Post!
         updatePost(title:String! , _id:ID!) : Post!
         deletePost(_id:ID!) : String!
+
+
         addComment(title:String!, _id:ID!):Comment!
         deleteComment(postId:ID! , commentId:ID!):String!
+        editComment(commentId:ID! , title:String!):Comment!
+
+        likePost(postId:ID!):Boolean!
+        dislikePost(postId:ID! , likeId:ID!):Boolean!
     }
        
 `);

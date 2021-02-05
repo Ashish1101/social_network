@@ -8,7 +8,7 @@ import mongoosePkg from 'mongoose';
 
 
 export default {
-	//mutation
+	//mutation add post
 	createPost: async (args, req) => {
 		if (!req.isAuth) {
 			throw new Error(errorName.UNAUTHORIZED);
@@ -38,7 +38,7 @@ export default {
 			throw err;
 		}
 	},
-	//mutation
+	//mutation update post
 	updatePost: async (args, req) => {
 		if (!req.isAuth) {
 			throw new Error(errorName.UNAUTHORIZED);
@@ -64,7 +64,7 @@ export default {
 			throw err;
 		}
 	},
-	//mutation
+	//mutation delete a post
 	deletePost: async (args, req) => {
 		if (!req.isAuth) {
 			throw new Error(errorName.UNAUTHORIZED);
@@ -87,6 +87,8 @@ export default {
 			throw error;
 		}
 	},
+
+	//query read all post by a user
 	readPostsOfUser: async (args, req) => {
 		if (!req.isAuth) throw new Error(errorName.UNAUTHORIZED);
 
@@ -113,7 +115,7 @@ export default {
 		}
 	},
 
-	//query
+	//query readSingle post data
 	readSinglePost: async (args, req) => {
 		if (!req.isAuth) throw new Error(errorName.UNAUTHORIZED);
 		try {
@@ -130,10 +132,12 @@ export default {
 
 
 			return { ...post._doc, createdAt: timeFormat(post.createdAt) , user:userDetails(post.user)};
-		} catch (err) {}
+		} catch (err) {
+			throw err
+		}
 	},
 
-	//mutation
+	//mutation addComment
     addComment: async (args , req) => {
 		if (!req.isAuth) throw new Error(errorName.UNAUTHORIZED);
 		try {
@@ -157,7 +161,7 @@ export default {
 		}
 	},
 
-	//mutation 
+	//mutation delete Comment
 	deleteComment: async (args , req) => {
         if(!req.isAuth) {
 			throw new Error(errorName.UNAUTHORIZED);
@@ -178,9 +182,65 @@ export default {
 		} catch (err) {
 			throw err;
 		}
-	}
+	},
 
-	//mutation 
-	//task edit comment
+	//mutation edit Comment
+
+	editComment: async (args , req) => {
+           if(!req.isAuth) {
+			   throw new Error(errorName.UNAUTHORIZED);
+		   }
+		   try {
+			   const comment = await Comment.findById(args.commentId);
+			   if(!comment) {
+				   throw new Error(errorName.COMMENT_NOT_FOUND);
+			   }
+			   
+			   await Comment.updateOne(
+				   {_id:args.commentId},
+				   {$set:{title:args.title}},
+				   {new:true}
+			   );
+			   console.log('comment!' , comment)
+			   return {...comment._doc , _id:comment._id}
+		   } catch (err) {
+			   throw err;
+		   }
+	},
+	//mutation  Like
+	likePost: async (args , req) => {
+         if(!req.isAuth) {
+			 throw new Error(errorName.UNAUTHORIZED);
+		 }
+		 try {
+			 const post = await Post.findById(args.postId);
+			 if(!post) {
+				 throw new Error(errorName.POST_NOT_FOUND);
+			 }
+             
+			 post.likes.push(req.userId);
+			 await post.save();
+			 return true;
+		 } catch (err) {
+			 throw err
+		 }
+	},
+
+	dislikePost: async (args , req) => {
+		if(!req.isAuth) {
+			throw new Error(errorName.UNAUTHORIZED);
+		}
+		try {
+			const post = await Post.findById(args.postId);
+			 if(!post) {
+				 throw new Error(errorName.POST_NOT_FOUND);
+			 }
+			 post.likes.pull({_id:args.likeId});
+			 await post.save();
+			 return true;
+		} catch (err) {
+			throw err;
+		}
+	}
 
 };

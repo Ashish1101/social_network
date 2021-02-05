@@ -5,7 +5,8 @@ export const errorName = {
     EMAILNOTFOUND:"EMAILNOTFOUND",
     CREDENTIAL_INVALID:"CREDENTIAL_INVALID",
     UNAUTHORIZED:"UNAUTHORIZED",
-    POST_NOT_FOUND :"POST_NOT_FOUND"
+    POST_NOT_FOUND :"POST_NOT_FOUND",
+    COMMENT_NOT_FOUND:"COMMENT_NOT_FOUND"
 }
 
 export const errorType = {
@@ -36,6 +37,10 @@ export const errorType = {
     POST_NOT_FOUND: {
         message : "Post does'nt exists",
         statusCode:401
+    },
+    COMMENT_NOT_FOUND : {
+       message : "Comment not found!",
+       statusCode:401
     }
 
 }
