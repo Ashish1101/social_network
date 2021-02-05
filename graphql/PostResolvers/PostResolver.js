@@ -4,6 +4,8 @@ import User from "../../models/User.js";
 import Comment from "../../models/Comment.js";
 import { userDetails } from "../../utils/userPopulate.js";
 import { timeFormat } from "../../utils/time.js";
+import mongoosePkg from 'mongoose';
+
 
 export default {
 	//mutation
@@ -95,13 +97,8 @@ export default {
 					populate: {path: 'comments' , populate:  {path:'user'}}
 				})
 				.select("-password");
-			//  const user = await User.findById(req.userId).populate({
-			//      path:'posts',
-			//      populate: {path:'comments'},
-			//  }).select('-password')
+			
 			//task fetch all post by user and show thier comment and like also
-
-			//  console.log([...user._doc.posts])
 			console.log(...user.posts);
 
 			if (!user) {
@@ -158,6 +155,32 @@ export default {
 		} catch (err) {
 			throw err
 		}
+	},
+
+	//mutation 
+	deleteComment: async (args , req) => {
+        if(!req.isAuth) {
+			throw new Error(errorName.UNAUTHORIZED);
+		}
+		try {
+			const post = await Post.findById(args.postId);
+			if(!post) {
+				throw new Error(errorName.POST_NOT_FOUND);
+			}
+			const commentTodelete = await Comment.findById(args.commentId);
+			console.log('commentId' ,typeof mongoosePkg.Types.ObjectId(args.commentId))
+			console.log('post id' ,typeof args.postId)
+			const comment = mongoosePkg.Types.ObjectId(args.commentId)
+			post.comments.pull({_id:comment});
+			await post.save();
+			await commentTodelete.remove();
+			return "Comment deleted";
+		} catch (err) {
+			throw err;
+		}
 	}
+
+	//mutation 
+	//task edit comment
 
 };
