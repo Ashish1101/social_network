@@ -50,6 +50,7 @@ const Schema = buildSchema(`
         updatePost(title:String! , _id:ID!) : Post!
         deletePost(_id:ID!) : String!
         addComment(title:String!, _id:ID!):Comment!
+        deleteComment(postId:ID! , commentId:ID!):String!
     }
        
 `);
