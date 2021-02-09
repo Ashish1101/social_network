@@ -6,6 +6,7 @@ import chalk from 'chalk'
 import Schema from './graphql/Schema.js'
 import rootResolver from './graphql/Resolvers.js'
 import mongoDb from './config/db.js'
+import cors from 'cors'
 import {getErrorCode} from './Error/Constant.js'
 import isAuth from './config/auth.js'
 //enviorment var
@@ -16,6 +17,7 @@ mongoDb();
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(morgan('dev'));
+app.use(cors())
 app.use(isAuth)
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
