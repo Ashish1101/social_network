@@ -31,11 +31,11 @@ app.use('/graphql' , graphqlHTTP({
     schema:Schema,
     rootValue: rootResolver,
     graphiql: true,
-    customFormatErrorFn : (err) => {
-        const error = getErrorCode(err.message)
-        console.log(chalk.red('custom error message') , err.message)
-        return ({message:error.message , statusCode:error.statusCode})
-    }
+    // customFormatErrorFn : (err) => {
+    //     const error = getErrorCode(err.message)
+    //     console.log(chalk.red('custom error message') , err.message)
+    //     return ({message:error.message , statusCode:error.statusCode})
+    // }
 }));
 
 

@@ -4,7 +4,7 @@ import User from "../../models/User.js";
 import Comment from "../../models/Comment.js";
 import { userDetails } from "../../utils/userPopulate.js";
 import { timeFormat } from "../../utils/time.js";
-import mongoosePkg from 'mongoose';
+import mongoosePkg  from 'mongoose';
 
 
 export default {
@@ -93,7 +93,7 @@ export default {
 		if (!req.isAuth) throw new Error(errorName.UNAUTHORIZED);
 
 		try {
-			const user = await User.findById(req.userId)
+			const user = await User.findById(req.userId) //req.userId
 				.populate({
 					path:'posts',
 					populate: {path: 'comments' , populate:  {path:'user'}}
@@ -122,6 +122,9 @@ export default {
 			const post = await Post.findById(args._id).populate({
 				path:'comments',
 				populate: {path:'user'}
+			}).populate({
+				path:'likes',
+				populate: {path: 'user'}
 			})
 
 			console.log('user ', post.user)
@@ -217,10 +220,19 @@ export default {
 			 if(!post) {
 				 throw new Error(errorName.POST_NOT_FOUND);
 			 }
-             
-			 post.likes.push(req.userId);
+             if(post.likes.includes(req.userId)) {
+				 post.likes.pull({_id:req.userId})
+			 } else {
+				post.likes.push(req.userId);
+			 }
+			 
+			
+			 const returnId = mongoosePkg.Types.ObjectId(req.userId)
+
+			//check weather the user already likes the post or not
+			
 			 await post.save();
-			 return true;
+			 return returnId;
 		 } catch (err) {
 			 throw err
 		 }
@@ -235,7 +247,7 @@ export default {
 			 if(!post) {
 				 throw new Error(errorName.POST_NOT_FOUND);
 			 }
-			 post.likes.pull({_id:args.likeId});
+			 post.likes.pull({_id:req.userId});
 			 await post.save();
 			 return true;
 		} catch (err) {

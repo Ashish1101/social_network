@@ -6,13 +6,14 @@ const Schema = buildSchema(`
         email : String
         _id : ID!
         posts: [Post]!
+        msg:String!
     }
 
     type Comment {
         _id:ID!
         createdAt:String!
         title:String!
-        user:User!
+        user:User
     }
 
     type Post {
@@ -21,6 +22,7 @@ const Schema = buildSchema(`
         comments:[Comment]!
         createdAt:String!
         user : User!
+        likes: [User]
     }
     
     type AuthData {
@@ -36,7 +38,7 @@ const Schema = buildSchema(`
 
     type Query {
        showUser(email:String!) : User!
-       readPostsOfUser: User!
+       readPostsOfUser : User!
        readSinglePost(_id:ID!):Post!
        getUserByID(_id:ID!):User!
        getUserByHandle(handle:String!):User!
@@ -58,8 +60,8 @@ const Schema = buildSchema(`
         deleteComment(postId:ID! , commentId:ID!):String!
         editComment(commentId:ID! , title:String!):Comment!
 
-        likePost(postId:ID!):Boolean!
-        dislikePost(postId:ID! , likeId:ID!):Boolean!
+        likePost(postId:ID!):ID!
+        dislikePost(postId:ID!):ID!
     }
        
 `);

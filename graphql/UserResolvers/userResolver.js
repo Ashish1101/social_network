@@ -8,10 +8,12 @@ const userResolver = {
 		try {
 			let user = await User.findOne({ email: args.email });
 			if (user) {
-				throw new Error(errorName.EMAILTAKEN);
+				// throw new Error(errorName.EMAILTAKEN);
+				throw new Error('Email already exists')
 			} else {
 				if (!args.email.endsWith("@gmail.com")) {
-					throw new Error(errorName.GMAILSUPPORT);
+					// throw new Error(errorName.GMAILSUPPORT);
+					throw new Error('We only support gmail address')
 				}
 				user = new User({
 					email: args.email,
@@ -27,7 +29,7 @@ const userResolver = {
 				const salt = await bcryptjs.genSalt(10);
 				user.password = await bcryptjs.hash(args.password, salt);
 				await user.save();
-				return { ...user._doc, _id: user._id };
+				return { ...user._doc, _id: user._id , msg:"Registered successfully." };
 			}
 		} catch (err) {
 			// console.log(err);
